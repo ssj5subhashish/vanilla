@@ -22,6 +22,7 @@ public class TestSandbox {
     void test_assignment(){
         BrowseActions.navigateToTelevisionProducts();
         BrowseActions.browseProducts();
+        BrowseActions.productDetails();
     }
 
     @AfterEach
