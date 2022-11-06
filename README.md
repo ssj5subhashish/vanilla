@@ -26,3 +26,42 @@ For easiest way to getting started, extract this project and open it from Intell
 Tip: Do remember to update this readme file for anything else that you think needs updating here!
 
 ## Success
+
+## Execute test in Local
+
+Execute test using IDE by running amazon.test.AssignedWorkflowTest.
+
+Execute test by command line if maven is configured:
+>mvn clean test -DHOST=host.localhost
+
+##Execute test in Docker
+
+Run docker compose to start docker container:
+>docker-compose -f docker-compose-v3-swarm.yml up -d
+
+Then run test by command or IDE:
+>mvn clean test -DHOST=host.docker.container
+
+You can also set the browser variable to run the test with Chrome/Firefox/Edge using: -DBROWSER=Chrome
+
+In order to generate a report, we should install the Allure command-line interpreter.
+ 
+For Win :
+1. Download the latest version as a zip archive from bintray https://jfrog.com/distribution/?bintrayRD=1#files/io%2Fqameta%2Fallure%2Fallure%2F2.7.0.
+2. Unpack the archive to the allure-command-line directory.
+3. Navigate to the bin directory.
+4. Add allure to system PATH.
+
+For Mac, you can install Allure with brew:
+1. brew install allure 
+
+For Linux:
+1. curl -o allure-2.13.8.tgz -OLs https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/2.9.0/allure-commandline-2.9.0.tgz
+2. sudo tar -zxvf allure-2.9.0.tgz -C /opt/
+3. sudo ln -s /opt/allure-2.9.0/bin/allure /usr/bin/allure
+4. allure --version
+
+Then trigger command from project directory : 
+>allure serve allure-results
+
+Report will be opened in the browser.

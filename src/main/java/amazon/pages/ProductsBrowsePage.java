@@ -14,7 +14,7 @@ public class ProductsBrowsePage extends CommonUtils {
     private static final By SAMSUNG_FILTER_SELECTED = By.xpath("//span[@class='a-size-base a-color-base a-text-bold'][contains(text(),'Samsung')]");
     private static final By SORT_BY_DROPDOWN_LABEL = By.xpath("//span[@class='a-dropdown-label']");
     private static final By SORT_BY_DROPDOWN_PROMPT = By.xpath("//span[@class='a-dropdown-prompt']");
-    private static final By SORT_BY_OPTION = By.cssSelector("#s-result-sort-select_2");
+    private static final By SORT_BY_OPTION = By.xpath("//a[@id='s-result-sort-select_2']");
     private static final String SORT_BY_VALUE = "Price: High to Low";
     private static final By SECOND_HIGHEST_PRICED_ITEM = By.xpath("//div[@data-component-type = 's-search-result' and @data-index = '2']");
 
