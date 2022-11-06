@@ -1,9 +1,8 @@
 package amazon.utils;
 
-import amazon.config.EnvFactory;
 import amazon.factories.DriverFactory;
-import com.typesafe.config.Config;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
@@ -20,36 +19,35 @@ import java.util.List;
 
 public class CommonUtils {
 
+    final static Logger logger = Logger.getLogger(CommonUtils.class);
+
+    public static WebDriver _driver = DriverFactory.getDriver();
+    public static WebDriverWait wait;
+    public static Actions actions;
+
     private static int timeout = 10;
 
-    public CommonUtils() {
-        _driver = DriverFactory.getDriver();
-    }
-
-    public static WebDriver _driver;
-    public WebDriverWait wait;
-    public Actions actions;
-    public Select select;
-
-    public void navigateToURL(String URL) {
+    public static void navigateToURL(String URL) {
         try {
             _driver.navigate().to(URL);
+            logger.info("Navigated to the URL: "+URL);
         } catch (Exception e) {
-            System.out.println("FAILURE: URL did not load: " + URL);
+            logger.error("FAILURE: URL did not load: " + URL);
+            e.printStackTrace();
             throw new TestException("URL did not load");
         }
     }
 
-    public void navigateBack() {
+    public static void navigateBack() {
         try {
             _driver.navigate().back();
         } catch (Exception e) {
-            System.out.println("FAILURE: Could not navigate back to previous page.");
+            logger.error("FAILURE: Could not navigate back to previous page.");
             throw new TestException("Could not navigate back to previous page.");
         }
     }
 
-    public String getPageTitle() {
+    public static String getPageTitle() {
         try {
             return _driver.getTitle();
         } catch (Exception e) {
@@ -57,7 +55,7 @@ public class CommonUtils {
         }
     }
 
-    public String getCurrentURL() {
+    public static String getCurrentURL() {
         try {
             return _driver.getCurrentUrl();
         } catch (Exception e) {
@@ -65,7 +63,7 @@ public class CommonUtils {
         }
     }
 
-    public WebElement getElement(By selector) {
+    public static WebElement getElement(By selector) {
         try {
             return _driver.findElement(selector);
         } catch (Exception e) {
@@ -74,7 +72,7 @@ public class CommonUtils {
         return null;
     }
 
-    public String getElementText(By selector) {
+    public static String getElementText(By selector) {
         waitUntilElementIsDisplayedOnScreen(selector);
         try {
             return StringUtils.trim(_driver.findElement(selector).getText());
@@ -84,7 +82,7 @@ public class CommonUtils {
         return null;
     }
 
-    public List<WebElement> getElements(By Selector) {
+    public static List<WebElement> getElements(By Selector) {
         waitForElementToBeVisible(Selector);
         try {
             return _driver.findElements(Selector);
@@ -93,7 +91,7 @@ public class CommonUtils {
         }
     }
 
-    public List<String> getListOfElementTexts(By selector) {
+    public static List<String> getListOfElementTexts(By selector) {
         List<String> elementList = new ArrayList<String>();
         List<WebElement> elements = getElements(selector);
 
@@ -108,7 +106,7 @@ public class CommonUtils {
         return elementList;
     }
 
-    public void click(By selector) {
+    public static void click(By selector) {
         WebElement element = getElement(selector);
         waitForElementToBeClickable(selector);
         try {
@@ -118,7 +116,7 @@ public class CommonUtils {
         }
     }
 
-    public void scrollToThenClick(By selector) {
+    public static void scrollToThenClick(By selector) {
         WebElement element = _driver.findElement(selector);
         actions = new Actions(_driver);
         try {
@@ -130,7 +128,7 @@ public class CommonUtils {
         }
     }
 
-    public void sendKeys(By selector, String value) {
+    public static void sendKeys(By selector, String value) {
         WebElement element = getElement(selector);
         clearField(element);
         try {
@@ -140,24 +138,24 @@ public class CommonUtils {
         }
     }
 
-    public void clearField(WebElement element) {
+    public static void clearField(WebElement element) {
         try {
             element.clear();
             waitForElementTextToBeEmpty(element);
         } catch (Exception e) {
-            System.out.print(String.format("The following element could not be cleared: [%s]", element.getText()));
+            logger.error(String.format("The following element could not be cleared: [%s]", element.getText()));
         }
     }
 
-    public void waitForElementToDisplay(By Selector) {
+    public static void waitForElementToDisplay(By Selector) {
         WebElement element = getElement(Selector);
         while (!element.isDisplayed()) {
-            System.out.println("Waiting for element to display: " + Selector);
+            logger.info("Waiting for element to display: " + Selector);
             sleep(200);
         }
     }
 
-    public void waitForElementTextToBeEmpty(WebElement element) {
+    public static void waitForElementTextToBeEmpty(WebElement element) {
         String text;
         try {
             text = element.getText();
@@ -168,12 +166,12 @@ public class CommonUtils {
                 text = element.getText();
             }
         } catch (Exception e) {
-            System.out.print(String.format("The following element could not be cleared: [%s]", element.getText()));
+            logger.error(String.format("The following element could not be cleared: [%s]", element.getText()));
         }
 
     }
 
-    public void waitForElementToBeVisible(By selector) {
+    public static void waitForElementToBeVisible(By selector) {
         try {
             wait = new WebDriverWait(_driver, timeout);
             wait.until(ExpectedConditions.presenceOfElementLocated(selector));
@@ -182,7 +180,7 @@ public class CommonUtils {
         }
     }
 
-    public void waitUntilElementIsDisplayedOnScreen(By selector) {
+    public static void waitUntilElementIsDisplayedOnScreen(By selector) {
         try {
             wait = new WebDriverWait(_driver, timeout);
             wait.until(ExpectedConditions.visibilityOfElementLocated(selector));
@@ -191,7 +189,7 @@ public class CommonUtils {
         }
     }
 
-    public void waitForElementToBeClickable(By selector) {
+    public static void waitForElementToBeClickable(By selector) {
         try {
             wait = new WebDriverWait(_driver, timeout);
             wait.until(ExpectedConditions.elementToBeClickable(selector));
@@ -200,8 +198,8 @@ public class CommonUtils {
         }
     }
 
-    public void sleep(final long millis) {
-        System.out.println((String.format("sleeping %d ms", millis)));
+    public static void sleep(final long millis) {
+        logger.info((String.format("sleeping %d ms", millis)));
         try {
             Thread.sleep(millis);
         } catch (InterruptedException ex) {
@@ -209,7 +207,7 @@ public class CommonUtils {
         }
     }
 
-    public void selectIfOptionTextContains(By selector, String searchCriteria) {
+    public static void selectIfOptionTextContains(By selector, String searchCriteria) {
 
         waitForElementToBeClickable(selector);
         Select dropdown = new Select(getElement(selector));
@@ -238,7 +236,7 @@ public class CommonUtils {
         }
     }
 
-    public void selectIfOptionTextEquals(By selector, String searchCriteria) {
+    public static void selectIfOptionTextEquals(By selector, String searchCriteria) {
 
         waitForElementToBeClickable(selector);
         Select dropdown = new Select(getElement(selector));
@@ -267,7 +265,7 @@ public class CommonUtils {
         }
     }
 
-    public List<String> getDropdownValues(By selector) {
+    public static List<String> getDropdownValues(By selector) {
 
         waitForElementToDisplay(selector);
         Select dropdown = new Select(getElement(selector));
@@ -285,5 +283,11 @@ public class CommonUtils {
             }
         }
         return elementList;
+    }
+
+    public static void closeAndQuitDriver(){
+        logger.info("Shutting down the browser...");
+        _driver.close();
+        _driver.quit();
     }
 }

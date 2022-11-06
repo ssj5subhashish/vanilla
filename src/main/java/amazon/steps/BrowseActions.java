@@ -5,18 +5,14 @@ import amazon.pages.ProductsBrowsePage;
 
 public class BrowseActions {
 
-    public void navigateToTelevisionProducts(){
-        HomePage homePage = new HomePage();
-        homePage.navigateToHomePage();
-        homePage.clickOnHamburgerMenu();
-        homePage.scrollAndClickTVAndAppliances();
-        homePage.clickOnTelevisionsSubMenu();
+    public static void navigateToTelevisionProducts(){
+        HomePage.clickOnHamburgerMenu();
+        HomePage.scrollAndClickTVAndAppliances();
+        HomePage.clickOnTelevisionsSubMenu();
     }
 
-    public void browseProducts(){
-        ProductsBrowsePage productsBrowsePage = new ProductsBrowsePage();
-        productsBrowsePage.verifyOnProductsBrowsePage();
+    public static void browseProducts(){
+        ProductsBrowsePage.verifyOnProductsBrowsePage();
     }
-
 
 }
